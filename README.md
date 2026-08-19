@@ -1,162 +1,78 @@
+# Cryptocurrency Market Analysis with Power BI and Linear Regression
 
-# Cryptocurrency Market Analysis Dashboard with Machine Learning Forecasting
+This repository contains an academic cryptocurrency market-analysis project that combines a **Power BI dashboard** with a **Google Colab/Jupyter forecasting notebook**. The work covers descriptive market analysis, top-asset comparisons, Bitcoin historical-price processing, and a simple Linear Regression experiment that produces an iterative 30-day forecast.
 
-## Project Overview
+The project is best presented as an educational analytics study and a portfolio example of combining business intelligence with introductory time-series feature engineering. It is **not** a live trading system, investment recommendation, or production-grade price-prediction service.
 
-This project presents an interactive Cryptocurrency Market Analysis Dashboard developed using Power BI and Python. The dashboard integrates live cryptocurrency market data from the CoinGecko API to provide real-time insights into the performance of the top 100 cryptocurrencies by market capitalization.
+## What is actually included
 
-The project combines Business Intelligence techniques with Machine Learning forecasting to enable both descriptive and predictive analysis. Users can explore market trends, compare cryptocurrency categories, identify top-performing assets, and analyze future Bitcoin price movements through a Linear Regression forecasting model.
+| Artifact | Role |
+| --- | --- |
+| `Forcasting_code.ipynb` | Colab-compatible notebook that calls CoinGecko endpoints, saves market snapshots, builds Bitcoin time features and a lagged-price feature, evaluates Linear Regression, and writes forecast output. The filename is retained from the original project. |
+| `task 3.pbix` | Power BI report file for the dashboard and interactive market-analysis views. Open with Power BI Desktop. |
+| `historical.csv` | Bundled Bitcoin historical-price snapshot used by the notebook. |
+| `forecast (1).csv` | Bundled forecast export from the notebook workflow. |
+| `TASK3 &4 REPORT.docx` | Academic report accompanying the dashboard and forecasting work. |
+| `requirements.txt` | Minimal Python environment for the notebook workflow. |
 
----
+## Notebook workflow
 
-## Project Objectives
+The notebook contains the following stages:
 
-The primary objectives of this project are:
+1. Calls the CoinGecko markets endpoint to retrieve a top-100 market snapshot and writes `crypto_top100.csv`.
+2. Calls the CoinGecko Bitcoin market-chart endpoint for approximately 90 days of historical prices and writes `historical.csv`.
+3. Creates `TimeInSeconds` and `Price_Lag1` features.
+4. Uses an ordered 80/20 train/test split rather than a random shuffle.
+5. Fits a scikit-learn `LinearRegression` model and reports MAE, RMSE, and R².
+6. Iteratively generates 30 days of hourly forecast points and writes `forecast.csv`.
+7. Includes an additional exploratory cell that creates a volatility-shaped forecast export; this should be treated as an experiment, not as an independently validated model.
 
-* To collect and analyze live cryptocurrency market data.
-* To develop an interactive Power BI dashboard for market visualization.
-* To perform descriptive and comparative analysis of cryptocurrency performance.
-* To implement a machine learning model for Bitcoin price forecasting.
-* To demonstrate the integration of Python analytics within a Business Intelligence environment.
+The recorded notebook output reports **MAE 179.95, RMSE 261.49, and R² 0.9847** for its saved historical test split. These are results from the bundled notebook run and should not be interpreted as evidence of reliable future-market performance. A lagged-price feature and a short historical window can make an in-sample or near-term backtest appear strong while still failing under market regime changes.
 
----
+## Reproduce the Python workflow
 
-## Data Source
+Create an environment and install the notebook dependencies:
 
-The project utilizes data obtained from the CoinGecko API, which provides near real-time cryptocurrency market information, including:
+```bash
+git clone https://github.com/UmerSajid842/cryptocurrency-market-analysis.git
+cd cryptocurrency-market-analysis
+python -m venv .venv
 
-* Cryptocurrency Name and Symbol
-* Current Price
-* Market Capitalization
-* Trading Volume
-* Market Rank
-* 24-Hour Price Change Percentage
+# macOS/Linux
+source .venv/bin/activate
 
-Historical Bitcoin price data was also collected for predictive modeling purposes.
+# Windows PowerShell
+# .venv\Scripts\Activate.ps1
 
----
-
-## Dashboard Features
-
-### Market Overview
-
-* Total Cryptocurrency Market Capitalization
-* Average 24-Hour Price Change
-* Total Number of Cryptocurrencies Analyzed
-* Market Sentiment Indicators
-
-### Cryptocurrency Analysis
-
-* Top 10 Cryptocurrencies by Market Capitalization
-* Top Gainers and Losers
-* Market Capitalization Distribution
-* Category-Based Comparison (Large Cap, Medium Cap, Small Cap)
-
-### Interactive Filtering
-
-* Dynamic Slicers
-* Cryptocurrency Selection
-* Category Filtering
-* Search Functionality
-
-### Forecasting Module
-
-* Bitcoin Historical Price Trend
-* Linear Regression Forecast
-* Future Price Projection
-* Forecast Accuracy Metrics
-
----
-
-## Machine Learning Implementation
-
-A Linear Regression model was developed using Python and Scikit-learn to forecast future Bitcoin prices.
-
-### Model Workflow
-
-1. Historical Bitcoin price data collection
-2. Data preprocessing and feature engineering
-3. Training and testing data split
-4. Model training using Linear Regression
-5. Model evaluation using:
-
-   * Mean Absolute Error (MAE)
-   * Root Mean Squared Error (RMSE)
-   * R² Score
-6. Future price forecasting
-
----
-
-## Technologies Used
-
-| Technology    | Purpose                             |
-| ------------- | ----------------------------------- |
-| Power BI      | Dashboard Development               |
-| Python        | Data Processing and Forecasting     |
-| Pandas        | Data Manipulation                   |
-| NumPy         | Numerical Computation               |
-| Scikit-learn  | Machine Learning                    |
-| CoinGecko API | Data Collection                     |
-| GitHub        | Version Control and Project Hosting |
-
----
-
-## Repository Structure
-
-```text
-Cryptocurrency-Market-Analysis/
-│
-├── Cryptocurrency_Dashboard.pbix
-├── Forecasting_Code.ipynb
-├── Report.pdf
-├── data/
-│   ├── crypto_top100.csv
-│   └── bitcoin_historical.csv
-│
-├── screenshots/
-│   ├── dashboard_overview.png
-│   ├── market_analysis.png
-│   └── forecasting_results.png
-│
-└── README.md
+pip install -r requirements.txt
+jupyter notebook Forcasting_code.ipynb
 ```
 
-## Key Insights
+Run the notebook cells in order. The CoinGecko API calls require network access and may be rate-limited or return data that differs from the bundled snapshots. For a fully offline review, use the tracked CSV files and inspect the existing notebook outputs.
 
-The analysis revealed that large-cap cryptocurrencies dominate the market, accounting for the majority of total market capitalization. Bitcoin and Ethereum continue to maintain significant influence over overall market trends. The forecasting model demonstrated the potential of integrating predictive analytics into Business Intelligence solutions for enhanced decision-making.
+## Open the Power BI dashboard
 
----
+Open `task 3.pbix` in Power BI Desktop. The PBIX file is the primary dashboard artifact in this repository. The current repository does not include a live web dashboard, a Streamlit app, or a screenshot directory; those are intentionally not claimed here.
 
-## Limitations
+The report and notebook were developed for academic/educational analysis. Refreshing the report may require reconnecting its data sources in Power BI and adapting the data model to the local CSV or a newly collected market snapshot.
 
-* CoinGecko provides near real-time rather than high-frequency trading data.
-* The forecasting model is based on Linear Regression and assumes linear relationships.
-* External factors such as news events and market sentiment were not incorporated.
-* Forecasting was limited to Bitcoin historical data.
+## Data source
 
----
+The notebook uses public CoinGecko API endpoints for market and Bitcoin historical-price data. The repository also includes dated CSV snapshots so that reviewers can inspect the project without making an API request. API responses, asset rankings, and prices change over time; the committed snapshots should be treated as historical project artifacts rather than current market data.
 
-## Future Improvements
+## Limitations and responsible use
 
-Future versions of this project may include:
+Cryptocurrency markets are volatile, non-stationary, and affected by factors not represented in this notebook, including liquidity, market structure, news, regulation, sentiment, and macroeconomic conditions. The Linear Regression model uses a small feature set and does not establish causality. The evaluation is a single chronological split and is not a walk-forward backtest with transaction costs, slippage, uncertainty intervals, or a live monitoring process.
 
-* ARIMA Forecasting Models
-* Facebook Prophet Forecasting
-* LSTM Deep Learning Models
-* Sentiment Analysis from Social Media
-* Real-Time Streaming Data Integration
-* Multi-Cryptocurrency Forecasting
+Accordingly, the forecast should not be used by itself to buy, sell, or hold any asset. This repository demonstrates an analytics workflow and its limitations; it does not provide financial advice or a reliable basis for investment decisions.
 
----
+## Portfolio positioning
 
-## Author
+This project demonstrates **Power BI reporting, API-backed data collection, Pandas feature engineering, chronological model evaluation, and transparent communication of forecasting limitations**. It complements the applied ML and data-product work on the [Umer Sajid GitHub profile](https://github.com/UmerSajid842) and the [active portfolio](https://umer-portfolio-preview.vercel.app/).
 
-**Umer Sajid**
-MS Data Science
-Pak-Austria Fachhochschule Institute of Applied Sciences and Technology
+## References
 
----
-
-## License
-
-This project was developed for academic and educational purposes.
+1. [CoinGecko API documentation](https://docs.coingecko.com/)
+2. [CoinGecko Markets API endpoint used in the notebook](https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false)
+3. [CoinGecko Bitcoin market-chart endpoint used in the notebook](https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=90)
+4. [Cryptocurrency Market Analysis repository](https://github.com/UmerSajid842/cryptocurrency-market-analysis)
